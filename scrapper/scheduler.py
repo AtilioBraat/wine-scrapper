@@ -4,6 +4,7 @@ import re
 from datetime import datetime
 from typing import Optional
 import logging
+import os
 
 from .scraper_core import extrair_dados_degustacoes
 from .notifier import send_ntfy_notification
@@ -13,7 +14,9 @@ logger = logging.getLogger(__name__)
 # --- CONFIGURAÇÃO ---
 # Altere estes valores para o seu caso de uso
 URL_ALVO = "https://cavenacional.com.br/247-degustacoes-"
-NTFY_TOPIC = "wineScrapper-caveNacional-sabado"
+# Lê o tópico da variável de ambiente (para o GitHub Actions)
+# ou usa um valor padrão (para testes locais).
+NTFY_TOPIC = os.getenv("NTFY_TOPIC", "wineScrapper-caveNacional-sabado")
 # --------------------
 
 def extrair_data_do_titulo(titulo: str) -> Optional[datetime]:
