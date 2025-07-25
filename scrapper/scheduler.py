@@ -1,5 +1,3 @@
-import schedule
-import time
 import re
 from datetime import datetime
 from typing import Optional
@@ -78,15 +76,9 @@ def executar_scraping():
     if not sabado_encontrado:
         logger.info("Nenhuma degustação encontrada para os próximos sábados.")
 
-def iniciar_agendador():
-    # --- PARA TESTE ---
-    logger.info("Executando o scraper uma vez para teste...")
+def executar_tarefa_diaria():
+    """
+    Ponto de entrada para a execução da tarefa de scraping.
+    É chamado diretamente pelo main.py.
+    """
     executar_scraping()
-
-    # --- CÓDIGO ORIGINAL (DEIXE COMENTADO DURANTE O TESTE) ---
-    # print("Agendador iniciado. A tarefa será executada todos os dias às 08:00.")
-    # schedule.every().day.at("08:00").do(executar_scraping)
-
-    # while True:
-    #     schedule.run_pending()
-    #     time.sleep(1)

@@ -1,6 +1,6 @@
 import logging
 import colorlog
-from scrapper.scheduler import iniciar_agendador
+from scrapper.scheduler import executar_tarefa_diaria
 
 def setup_logging():
     """Configura o sistema de logging para a aplicação."""
@@ -28,7 +28,7 @@ def setup_logging():
 
 def run():
     setup_logging()
-    iniciar_agendador()
+    executar_tarefa_diaria()
 
 if __name__ == "__main__":
     run()

@@ -1,6 +1,5 @@
 requests==2.31.0
 beautifulsoup4==4.12.3
-schedule==1.2.1
 types-beautifulsoup4==4.12.0.20240504
 types-requests==2.31.0.20240406
 colorlog==6.8.2
