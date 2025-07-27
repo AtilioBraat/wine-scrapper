@@ -17,7 +17,7 @@ URL_ALVO = "https://cavenacional.com.br/247-degustacoes-"
 NTFY_TOPIC = os.getenv("NTFY_TOPIC", "wineScrapper-caveNacional-sabado")
 # Nova configuração para notificar quando não há resultados.
 # Defina como "true" ou "1" no ambiente para ativar.
-NOTIFY_ON_NO_RESULTS = os.getenv("NOTIFY_ON_NO_RESULTS", False) in (True, 1)
+NOTIFY_ON_NO_RESULTS = os.getenv("NOTIFY_ON_NO_RESULTS", True)
 # --------------------
 
 def extrair_data_do_titulo(titulo: str) -> Optional[datetime]:
