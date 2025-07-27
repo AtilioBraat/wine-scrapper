@@ -5,7 +5,14 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def send_ntfy_notification(topic: str, title: str, message: str, click_url: Optional[str] = None):
+def send_ntfy_notification(
+    topic: str,
+    title: str,
+    message: str,
+    click_url: Optional[str] = None,
+    priority: str = "default",
+    tags: Optional[str] = None,
+):
     """
     Envia uma notificação push via ntfy.sh.
 
@@ -14,6 +21,8 @@ def send_ntfy_notification(topic: str, title: str, message: str, click_url: Opti
         title (str): O título da notificação.
         message (str): O corpo da mensagem da notificação.
         click_url (Optional[str]): URL para abrir ao clicar na notificação.
+        priority (str): A prioridade da notificação (e.g., 'high', 'default', 'low').
+        tags (Optional[str]): Uma string de emojis para usar como ícone.
     """
     if not topic:
         logger.warning("Tópico ntfy.sh não configurado. Pulando notificação.")
@@ -23,12 +32,12 @@ def send_ntfy_notification(topic: str, title: str, message: str, click_url: Opti
         requests.post(
             f"https://ntfy.sh/{topic}",
             data=message.encode('utf-8'),
-            headers={
+            headers=({
                 "Title": title.encode('utf-8'),
                 "Click": click_url or "",
-                "Priority": "high",  # Prioridade alta para o alerta
-                "Tags": "tada"       # Adiciona um emoji de comemoração
-            },
+                "Priority": priority,
+                **({"Tags": tags} if tags else {}),
+            }),
             timeout=10
         )
         logger.info(f"Notificação enviada para o tópico '{topic}'.")
@@ -62,5 +71,12 @@ if __name__ == "__main__":
     test_message = "Esta é uma mensagem de teste para confirmar que as notificações estão funcionando corretamente."
     test_click_url = "https://cavenacional.com.br/"
 
-    send_ntfy_notification(test_topic, test_title, test_message, test_click_url)
+    send_ntfy_notification(
+        test_topic,
+        test_title,
+        test_message,
+        click_url=test_click_url,
+        priority="high",
+        tags="tada",
+    )
     logger.info("Teste concluído. Verifique seu celular para a notificação.")

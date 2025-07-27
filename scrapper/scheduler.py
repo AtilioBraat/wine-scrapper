@@ -15,6 +15,9 @@ URL_ALVO = "https://cavenacional.com.br/247-degustacoes-"
 # Lê o tópico da variável de ambiente (para o GitHub Actions)
 # ou usa um valor padrão (para testes locais).
 NTFY_TOPIC = os.getenv("NTFY_TOPIC", "wineScrapper-caveNacional-sabado")
+# Nova configuração para notificar quando não há resultados.
+# Defina como "true" ou "1" no ambiente para ativar.
+NOTIFY_ON_NO_RESULTS = os.getenv("NOTIFY_ON_NO_RESULTS", "false").lower() in ('true', '1', 'yes')
 # --------------------
 
 def extrair_data_do_titulo(titulo: str) -> Optional[datetime]:
@@ -68,13 +71,24 @@ def executar_scraping():
                     topic=NTFY_TOPIC,
                     title=f"🍷 {evento.title}",
                     message=f"Preço: {evento.price}",
-                    click_url=evento.link
+                    click_url=evento.link,
+                    priority="high",
+                    tags="tada",
                 )
         else:
             logger.debug(f"{i}. {evento.title} - {evento.price} (Data não identificada)")
 
     if not sabado_encontrado:
         logger.info("Nenhuma degustação encontrada para os próximos sábados.")
+        if NOTIFY_ON_NO_RESULTS:
+            logger.info("Enviando notificação de 'nenhum resultado' conforme configurado.")
+            send_ntfy_notification(
+                topic=NTFY_TOPIC,
+                title="🍷 Nenhuma degustação de sábado",
+                message="O scraper rodou, mas não encontrou novos eventos para sábado.",
+                priority="default",
+                tags="information_source", # Ícone de "i" de informação
+            )
 
 def executar_tarefa_diaria():
     """
